@@ -10,3 +10,6 @@ Usage:
 <code>python3 main.py 351456135165132154654651324654321324646312654651321654632165</code>
 3. Print or write down the back up phrase
 4. Import the private key into your favorite wallet software
+
+
+Why use casino dice? See [here](http://www.dakkadakka.com/wiki/en/That%27s_How_I_Roll_-_A_Scientific_Analysis_of_Dice). Thanks [ferretinjapan](http://www.reddit.com/user/ferretinjapan)!

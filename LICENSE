@@ -1,6 +1,12 @@
 The MIT License (MIT)
 
+main.py:
+Copyright (c) 2013 Vitalik Buterin (from his pybitcointools repo)
 Copyright (c) 2014 Pierre Rochard
+
+Dice List:
+Copyright (c) 1995-2004 Arnold G. Reinhold, Cambridge, Mass. USA.
+http://world.std.com/~reinhold/dicewarewordlist.pdf
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,4 +25,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-

@@ -19,11 +19,13 @@ for roll in dicerolls:
             number = line[:5]
             word = line[6:].strip()
             if roll == number:
-                dicewords = ''.join((dicewords, word))
+                dicewords = ' '.join((dicewords, word))
 
+
+dicewords = dicewords.strip()
 private_key = dicewords.encode('ascii')
 private_key = hashlib.sha256(private_key).digest()
 private_key = binascii.hexlify(private_key)
 private_key = private_key.decode('utf-8')
-print("Back up phrase: " + dicewords)
+print("Back up phrase: '" + dicewords + "'")
 print("Private key: " + private_key)

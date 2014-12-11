@@ -37,6 +37,7 @@ dicewords = ''
 for roll in dicerolls:
      dicewords = ' '.join((dicewords, worddict[roll]))
 
+dicewords = dicewords.strip()
 private_key = dicewords.encode('ascii')
 private_key = hashlib.sha256(private_key).digest()
 private_key = binascii.hexlify(private_key)

@@ -3,6 +3,24 @@ import binascii
 import csv
 import hashlib
 import sys
+import argparse
+
+def load_worddict():
+    worddict = {}
+
+    with open('Dice List.csv') as file:
+        for line in file:
+            worddict[line[:5]] = line[6:].strip()
+    return worddict
+
+def split(str, num):
+    return [ str[start:start+num] for start in range(0, len(str), num) ]
+
+def phrase_to_privkey(phrase):
+    privkey = phrase.encode('ascii')
+    privkey = hashlib.sha256(privkey).digest()
+    privkey = binascii.hexlify(privkey)
+    return privkey.decode('utf-8')
 
 # By Filioo Valsorda: https://filippo.io/brainwallets-from-the-password-to-the-address/
 def encodeWIF(private_key):
@@ -19,29 +37,46 @@ def encodeWIF(private_key):
         output = code_string[remainder] + output
     return output
 
-def split(str, num):
-    return [ str[start:start+num] for start in range(0, len(str), num) ]
+def numaddrs_type(str):
+    x = int(str)
+    if x < 1:
+        msg = "Number of addresses must be greater than 0."
+        raise argparse.ArgumentTypeError(msg)
+    return x
 
-worddict = {}
+def print_addr(phrase, key):
+    print()
+    print("Back up phrase: '" + phrase + "'")
+    print("Private key: " + key)
+    print("Private key (WIF): " + encodeWIF(key))
 
-with open('Dice List.csv') as file:
-    for line in file:
-        worddict[line[:5]] = line[6:].strip()
+def main():
+    worddict = load_worddict()
 
-dicerolls = sys.argv[1]
+    parser = argparse.ArgumentParser(description='Generate diceware addresses.')
+    parser.add_argument('dicerolls', help='dice rolls - no spaces')
+    parser.add_argument('-n','--numaddrs', nargs='?', help="Number of diceware addresses (>= 1)", type=numaddrs_type)
+    args = parser.parse_args()
+    
+    dicerolls = args.dicerolls
+    dicerolls = split(dicerolls, 5)
+    dicewords = ''
 
-dicerolls = split(dicerolls, 5)
+    for roll in dicerolls:
+        dicewords = ' '.join((dicewords, worddict[roll]))
 
-dicewords = ''
+    dicewords = dicewords.strip()
 
-for roll in dicerolls:
-     dicewords = ' '.join((dicewords, worddict[roll]))
+    private_key = phrase_to_privkey(dicewords)
+    print_addr(dicewords, private_key)
 
-dicewords = dicewords.strip()
-private_key = dicewords.encode('ascii')
-private_key = hashlib.sha256(private_key).digest()
-private_key = binascii.hexlify(private_key)
-private_key = private_key.decode('utf-8')
-print("Back up phrase: '" + dicewords + "'")
-print("Private key: " + private_key)
-print("Private key (WIF): " + encodeWIF(private_key))
+    if (args.numaddrs and args.numaddrs > 1):
+        for i in range(1, args.numaddrs):
+            dicewordsnum = dicewords + str(i)
+            private_key = phrase_to_privkey(dicewordsnum)
+            print_addr(dicewordsnum, private_key)
+
+    print()
+
+if __name__ == '__main__':
+    main()

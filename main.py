@@ -37,8 +37,31 @@ def encodeWIF(private_key):
         output = code_string[remainder] + output
     return output
 
+def dicerolls_type(str):
+    try:
+        x = int(str)
+    except:
+        msg = "Dicerolls must only include integers."
+        raise argparse.ArgumentTypeError(msg)
+
+    for s in str:
+        if int(s) < 1 or int(s) > 6:
+            msg = "Each die roll must be a number 1-6."
+            raise argparse.ArgumentTypeError(msg)
+
+    remainder = len(str) % 5
+    if not remainder == 0:
+        msg = "Each word must be five dicerolls. Roll a die {0} more times.".format(5-remainder)
+        raise argparse.ArgumentTypeError(msg)
+    return str
+
 def numaddrs_type(str):
-    x = int(str)
+    try:
+        x = int(str)
+    except:
+        msg = "Number of addresses must be an integer."
+        raise argparse.ArgumentTypeError(msg)
+
     if x < 1:
         msg = "Number of addresses must be greater than 0."
         raise argparse.ArgumentTypeError(msg)
@@ -50,13 +73,17 @@ def print_addr(phrase, key):
     print("Private key: " + key)
     print("Private key (WIF): " + encodeWIF(key))
 
+def get_parser():
+    parser = argparse.ArgumentParser(description='Generate diceware addresses.')
+    parser.add_argument('dicerolls', help='dice rolls - no spaces', type=dicerolls_type)
+    parser.add_argument('-n','--numaddrs', nargs='?', help="Number of diceware addresses (>= 1)", type=numaddrs_type)
+    parser.add_argument('-s','--salt',nargs='?', help="Add a salt (quotation marks are optional, unless salt includes spaces; use escape character for quotation marks in salt)")
+    return parser.parse_args()
+
 def main():
     worddict = load_worddict()
 
-    parser = argparse.ArgumentParser(description='Generate diceware addresses.')
-    parser.add_argument('dicerolls', help='dice rolls - no spaces')
-    parser.add_argument('-n','--numaddrs', nargs='?', help="Number of diceware addresses (>= 1)", type=numaddrs_type)
-    args = parser.parse_args()
+    args = get_parser()
     
     dicerolls = args.dicerolls
     dicerolls = split(dicerolls, 5)
@@ -66,6 +93,9 @@ def main():
         dicewords = ' '.join((dicewords, worddict[roll]))
 
     dicewords = dicewords.strip()
+
+    if args.salt:
+        dicewords += ' ' + args.salt.strip()
 
     private_key = phrase_to_privkey(dicewords)
     print_addr(dicewords, private_key)

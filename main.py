@@ -77,6 +77,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Generate diceware addresses.')
     parser.add_argument('dicerolls', help='dice rolls - no spaces', type=dicerolls_type)
     parser.add_argument('-n','--numaddrs', nargs='?', help="Number of diceware addresses (>= 1)", type=numaddrs_type)
+    parser.add_argument('-s','--salt',nargs='?', help="Add a salt (quotation marks are optional, unless salt includes spaces; use escape character for quotation marks in salt)")
     return parser.parse_args()
 
 def main():
@@ -92,6 +93,9 @@ def main():
         dicewords = ' '.join((dicewords, worddict[roll]))
 
     dicewords = dicewords.strip()
+
+    if args.salt:
+        dicewords += ' ' + args.salt.strip()
 
     private_key = phrase_to_privkey(dicewords)
     print_addr(dicewords, private_key)

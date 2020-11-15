@@ -1,6 +1,8 @@
 entropic
 ========
 
+**DO NOT USE THIS REPO TO SECURE ANY AMOUNT OF MONEY. IT IS ARCHIVED AND FOR EDUCATIONAL PURPOSES ONLY.**
+
 A simple utility for creating [high entropy](http://www.contravex.com/2014/03/14/on-making-high-entropy-bitcoin-paper-wallets/) bitcoin private keys.
 
 ## Usage:
